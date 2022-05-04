@@ -5,6 +5,8 @@ local xVM = -5
 local yVM = 0
 local zVM = -10
 
+local targetRGB = 1
+local guiRGB = 0
 
 local totalKills = 0
 local current_fps = 0
@@ -20,7 +22,6 @@ local function event_hook(ev)
   totalKills = totalKills + 1
 end
 
-
 function RGBRainbow(frequency)
   local curtime = globals.CurTime()
   local r, g, b
@@ -30,6 +31,11 @@ function RGBRainbow(frequency)
 
   return r, g, b
 end
+
+
+
+
+
 
 local function primary()
   if globals.FrameCount() % 100 == 0 then
@@ -46,10 +52,10 @@ local function primary()
     end
   end
   if overrideViewmodels == 1 then
-    client.RemoveConVarProtection( "tf_viewmodels_offset_override" )
-    client.SetConVar( "tf_viewmodels_offset_override", xVM .. " " .. yVM .. " " .. zVM)
+    client.RemoveConVarProtection("tf_viewmodels_offset_override")
+    client.SetConVar("tf_viewmodels_offset_override", xVM .. " " .. yVM .. " " .. zVM)
   end
-  
+
   local r, g, b = RGBRainbow(1)
 
   draw.SetFont(arial)
@@ -91,6 +97,7 @@ local function secondary()
   local fakeLag = gui.GetValue("fake lag")
   local fakeLagAmount = gui.GetValue("fake lag value")
   local r, g, b = RGBRainbow(1)
+  local hexRGB = tonumber("0x" .. string.format("%02x%02x%02x%02x", r, g, b, 255))
 
 
   draw.SetFont(arial)
@@ -150,14 +157,23 @@ local function secondary()
     draw.Text(15, 500, "Fake Ping: OFF")
   end
 
-    --checks to see if fake lag is on and displays it
-    if (fakeLag == 1) then
-      draw.Color(r, g, b, 255)
-      draw.Text(15, 520, "Fake Lag: " .. fakeLagAmount .. "")
-    else
-      draw.Color(255, 255, 255, 255)
-      draw.Text(15, 520, "Fake Lag: OFF")
-    end
+  --checks to see if fake lag is on and displays it
+  if (fakeLag == 1) then
+    draw.Color(r, g, b, 255)
+    draw.Text(15, 520, "Fake Lag: " .. fakeLagAmount .. "")
+  else
+    draw.Color(255, 255, 255, 255)
+    draw.Text(15, 520, "Fake Lag: OFF")
+  end
+
+
+  if (targetRGB == 1) then
+    gui.SetValue("aimbot target color", hexRGB)
+  end
+  if (guiRGB == 1) then
+    gui.SetValue("gui color", hexRGB)
+  end
+
 
 end
 
